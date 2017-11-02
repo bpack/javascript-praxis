@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Prime Factorization</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <div id="prime-container">
+      <p>Enter a number to get the prime factors:</p>
+      <input type="text" id="number">
+      <div id="result">
+
+      </div>
+    </div>
+
+    <script>
+
+    function factors(num){
+        var srt = Math.sqrt(num);  
+        var ra = arguments[1] || []; 
+        var n = 2;  
+
+        if(num % n){ 
+            n = 3;
+            while((num % n) && ((n = n + 2) < srt)){}
+        }   
+
+        n = (n <= srt) ? n : num;
+        ra.push(n);
+ 
+        return (n === num) ? ra : factors(num / n, ra) ;
+    };
+
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    };
+
+    function isPositiveInteger(n){
+        return isNumeric(n) && Number.isInteger(n) && n > -1;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var input = document.getElementById("number");
+        var output = document.getElementById("result");
+
+        input.addEventListener('keyup', function(e) {
+          
+            var v = this.value;
+            var number = Number(v);
+            var result = '';
+
+            if(isPositiveInteger(number)){
+                var f = factors(number);
+                result = (number > 1) ? f.join(', ') : '';
+            }
+            else if(v){
+                result = "Invalid number";
+            }
+          
+            output.innerHTML = result;
+        });
+       
+    });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,16 @@
+
+#prime-container {
+    font-family: 'Fira Sans', sans-serif;
+    border: 1px black solid;
+    max-width: 400px;
+    text-align: center;
+    padding: 2.5em;
+}
+
+#number {
+    width: 20em;
+}
+
+#result {
+    padding-top: 1em;
+}

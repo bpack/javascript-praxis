@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Soundboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="keys">
+    <div data-key="87" class="key">
+      <kbd>w</kbd>
+    </div>
+    <div data-key="69" class="key">
+      <kbd>E</kbd>
+    </div>
+    <div data-key="82" class="key">
+      <kbd>R</kbd>
+    </div>
+    <div data-key="84" class="key">
+      <kbd>T</kbd>
+    </div>
+    <div data-key="89" class="key">
+      <kbd>Y</kbd>
+    </div>
+    <div data-key="79" class="key">
+      <kbd>O</kbd>
+    </div>
+    <div data-key="80" class="key">
+      <kbd>P</kbd>
+    </div>
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+    </div>
+
+    <div>
+      <span class="sound" id="source-used"></span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="effects/clap.wav"></audio>
+  <audio data-key="68" src="effects/kick.wav"></audio>
+  <audio data-key="69" src="effects/shotgun.wav"></audio>
+  <audio data-key="70" src="effects/openhat.wav"></audio>
+  <audio data-key="71" src="effects/boom.wav"></audio>
+  <audio data-key="72" src="effects/ride.wav"></audio>
+  <audio data-key="74" src="effects/snare.wav"></audio>
+  <audio data-key="75" src="effects/tom.wav"></audio>
+  <audio data-key="76" src="effects/tink.wav"></audio>
+  <audio data-key="79" src="effects/metal.wav"></audio>
+  <audio data-key="80" src="effects/paper.wav"></audio>
+  <audio data-key="82" src="effects/ricochet.wav"></audio>
+  <audio data-key="83" src="effects/hihat.wav"></audio>
+  <audio data-key="84" src="effects/thunder.wav"></audio>
+  <audio data-key="87" src="effects/womp.wav"></audio>
+  <audio data-key="89" src="effects/click.wav"></audio>
+
+<script>
+
+  function handleSound(keycode){
+      var effect = document.querySelector("audio[data-key='" + keycode + "']");
+      var key = document.querySelector(".keys div[data-key='" + keycode + "']");
+
+      if(!effect) { return };
+
+      effect.currentTime = 0; // Start at beginning if already playing
+      effect.play();
+
+      key.classList.add("playing");
+
+      var p = effect.src;
+      var s = p.substring(p.lastIndexOf("/") + 1, p.lastIndexOf("."));
+  }
+
+  function removeTransition(transition){
+      if(transition.propertyName !== "transform") { return; }
+
+      this.classList.remove("playing");
+  }
+
+  function handleClick(event){
+      var keycode = event.target.parentNode.getAttribute('data-key');
+      if(keycode){
+          handleSound(keycode);
+      }
+  }
+
+  function handleKeypress(event){
+      var keycode = event.keyCode;
+      handleSound(keycode);
+  }
+
+  var keys = document.querySelectorAll(".key");
+  for(var i = 0; i < keys.length; i++){
+      var node = keys[i];
+      node.addEventListener('transitionend', removeTransition);
+      node.addEventListener('click', handleClick);
+  }
+
+  window.addEventListener('keydown', handleKeypress); 
+
+</script>
+
+
+</body>
+</html>
