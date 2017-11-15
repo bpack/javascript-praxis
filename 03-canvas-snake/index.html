@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snake</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas height="360" width="480" id="snake"></canvas>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    game.init(event.target);
+});
+  
+(function(game, undefined){
+    "use strict";
+
+    const POINTSIZE = 15;
+    const REFRESH_RATE = 100; 
+
+    var _grid_width;
+    var _grid_height;
+    var _running;
+    var _timer;
+
+    var _snake = {
+        body: [],
+        color: "#0095DD",
+        direction: [],
+        move: function(){
+            var newx = this.body[0][0] + this.direction[0];
+            var newy = this.body[0][1] + this.direction[1];
+            var newhead = [newx, newy];
+
+            this.body.unshift(newhead);
+            this.body.pop();
+        },
+        grow: function(){
+            var newx = this.body[0][0] + this.direction[0];
+            var newy = this.body[0][1] + this.direction[1];
+            var newhead = [newx, newy];
+
+            this.body.unshift(newhead);
+        }
+    };
+    var _apple = {
+        color: "#FF0000",
+        position: []
+    };
+
+    var _canvas;
+
+    game.init = function(document){
+        document.addEventListener("keydown", this.handleKey, false);
+
+        _canvas = document.getElementById("snake");
+
+        _grid_width = _canvas.width / POINTSIZE;
+        _grid_height = _canvas.height / POINTSIZE;
+
+        var x = Math.round(_grid_width / 2);
+        var y = Math.round(_grid_height / 2);
+
+        _snake.body = [ [x, y], [x, y + 1], [x, y + 2] ];
+
+        this.placeApple();
+        this.draw();
+
+        console.log(_snake);
+        console.log(_apple);
+        console.log("Game loaded");
+    };
+
+    game.placeApple = function(){
+        var pos;
+        while(!pos){
+            var x = Math.floor(Math.random() * _grid_width);
+            var y = Math.floor(Math.random() * _grid_height);
+
+            if(!this.pointInSnake(x, y)){
+                pos = [x, y];
+            }
+        }
+
+        _apple.position = pos;
+    }
+
+    game.pointInSnake = function(x, y){
+        for(var i = 0; i < _snake.body.length; i++){
+            var bodyx = _snake.body[i][0];
+            var bodyy = _snake.body[i][1];
+
+            if(bodyx === x && bodyy === y){
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    game.isAppleTouched = function(x, y){
+        return x === _apple.position[0] && y === _apple.position[1];
+    };
+
+    game.update = function(){
+        var head = _snake.body[0];
+
+        if(game.isAppleTouched(_snake.body[0][0], _snake.body[0][1])){
+            _snake.grow();
+            game.placeApple();
+        }
+        _snake.move();
+
+     //   console.log(_snake.body);
+
+        game.draw();
+    };
+
+    game.start = function(){
+        _running = true;
+        _timer = setInterval(this.update, REFRESH_RATE);
+    };
+
+    game.pause = function(){
+        _running = false;
+        clearInterval(_timer);
+    }
+
+    game.handleKey = function(e){
+        if(!_running){
+            game.start();
+        }
+        switch(e.keyCode){
+            case 32:     // space
+                game.pause();
+                break;
+            case 37:     // left
+                _snake.direction = [-1, 0];
+                break;
+            case 38:     // up
+                _snake.direction = [0, -1];
+                break;
+            case 39:     // right
+                _snake.direction = [1, 0];
+                break;
+            case 40:     // down
+                _snake.direction = [0, 1];
+                break;
+        }
+    };
+
+    game.draw = function(){
+        var ctx = _canvas.getContext("2d");
+        ctx.clearRect(0, 0, _canvas.width, _canvas.height);
+
+        for(var i = 0; i < _snake.body.length; i++){
+            ctx.beginPath();
+            ctx.rect(_snake.body[i][0] * POINTSIZE, _snake.body[i][1] * POINTSIZE, POINTSIZE, POINTSIZE);
+            ctx.fillStyle = _snake.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        ctx.beginPath();
+        ctx.rect(_apple.position[0] * POINTSIZE, _apple.position[1] * POINTSIZE, POINTSIZE, POINTSIZE);
+        ctx.fillStyle = _apple.color;
+        ctx.fill();
+        ctx.closePath();
+    };
+
+}(window.game = window.game || {}));
+
+</script>
+
+
+</body>
+</html>
