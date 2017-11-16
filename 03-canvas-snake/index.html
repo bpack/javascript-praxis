@@ -18,13 +18,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 (function(game, undefined){
     "use strict";
 
-    const POINTSIZE = 15;
+    const POINTSIZE = 20;
     const REFRESH_RATE = 100; 
+
+    var WIN_LENGTH = 10;
 
     var _grid_width;
     var _grid_height;
     var _running;
     var _timer;
+    var _lost;
+    var _won;
 
     var _snake = {
         body: [],
@@ -58,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         _canvas = document.getElementById("snake");
 
-        _grid_width = _canvas.width / POINTSIZE;
-        _grid_height = _canvas.height / POINTSIZE;
+        _grid_width = Math.floor(_canvas.width / POINTSIZE);
+        _grid_height = Math.floor(_canvas.height / POINTSIZE);
 
         var x = Math.round(_grid_width / 2);
         var y = Math.round(_grid_height / 2);
@@ -101,9 +105,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return false;
     };
 
+    game.isBodyCollision = function(){
+        var head = _snake.body[0];
+        for(var i = 1; i < _snake.body.length; i++){
+            var bodyx = _snake.body[i][0];
+            var bodyy = _snake.body[i][1];
+
+            if(bodyx === head[0] && bodyy === head[1]){
+                return true;
+            }
+        }
+        return false;
+    }
+
     game.isAppleTouched = function(x, y){
         return x === _apple.position[0] && y === _apple.position[1];
     };
+
+    game.isWallCollision = function(x, y){
+        return x === -1 || x === _grid_width || y === -1 || y === _grid_height;
+    }
+
+    game.isLoss = function(){
+        return game.isWallCollision(_snake.body[0][0], _snake.body[0][1]) || game.isBodyCollision(); 
+    }
+
+    game.isWin = function(){
+        return _snake.body.length == WIN_LENGTH;
+    }
 
     game.update = function(){
         var head = _snake.body[0];
@@ -114,6 +143,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
         _snake.move();
 
+        if(game.isWin()){
+            console.log("win");
+            _won = true;
+            game.pause();
+        }
+        else if(game.isLoss()){
+            console.log(_snake.body[0] + ' ' + _grid_width + ' ' + _grid_height);
+            _lost = true;
+            game.pause();
+        }
      //   console.log(_snake.body);
 
         game.draw();
@@ -130,12 +169,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     game.handleKey = function(e){
-        if(!_running){
+        if(!_running && !_lost && !_won){
             game.start();
         }
         switch(e.keyCode){
             case 32:     // space
-                game.pause();
+                if(_lost || _won) { game.reset(); }
+                else if(_running) { game.pause(); }
                 break;
             case 37:     // left
                 _snake.direction = [-1, 0];
@@ -151,6 +191,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 break;
         }
     };
+
+    game.reset = function(){
+        var x = Math.round(_grid_width / 2);
+        var y = Math.round(_grid_height / 2);
+
+        clearInterval(_timer);
+        _snake.body = [ [x, y], [x, y + 1], [x, y + 2] ];
+        _snake.direction = [];
+        _lost = false;
+        _won = false;
+
+        game.placeApple();
+        game.draw();
+    }
 
     game.draw = function(){
         var ctx = _canvas.getContext("2d");
