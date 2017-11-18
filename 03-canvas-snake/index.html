@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var _snake = {
         body: [],
         color: "#0095DD",
-        direction: [],
+        direction: [0, -1],
         move: function(){
             var newx = this.body[0][0] + this.direction[0];
             var newy = this.body[0][1] + this.direction[1];
@@ -144,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         _snake.move();
 
         if(game.isWin()){
-            console.log("win");
             _won = true;
             game.pause();
         }
@@ -153,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             _lost = true;
             game.pause();
         }
-     //   console.log(_snake.body);
 
         game.draw();
     };
@@ -169,14 +167,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     game.handleKey = function(e){
-        if(!_running && !_lost && !_won){
-            game.start();
+
+        if(_lost || _won) { game.reset(); }
+        else if(!_running) { game.start(); }
+        else if(_running && (e.keyCode < 37 || e.keyCode > 40)){
+            game.pause();
         }
+
         switch(e.keyCode){
-            case 32:     // space
-                if(_lost || _won) { game.reset(); }
-                else if(_running) { game.pause(); }
-                break;
             case 37:     // left
                 _snake.direction = [-1, 0];
                 break;
@@ -198,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         clearInterval(_timer);
         _snake.body = [ [x, y], [x, y + 1], [x, y + 2] ];
-        _snake.direction = [];
+        _snake.direction = [0, -1];
         _lost = false;
         _won = false;
 
@@ -223,6 +221,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         ctx.fillStyle = _apple.color;
         ctx.fill();
         ctx.closePath();
+
+        if(_lost){
+            ctx.font = '32px san-serif';
+            ctx.fillText("Loss", 10, 35);
+        }
+        else if(_won){
+            ctx.font = '32px san-serif';
+            ctx.fillText("Win", 10, 35);
+        }
     };
 
 }(window.game = window.game || {}));
