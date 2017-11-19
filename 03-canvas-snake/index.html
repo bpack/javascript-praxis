@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const POINTSIZE = 20;
     const REFRESH_RATE = 100; 
 
-    var WIN_LENGTH = 10;
+    var WIN_LENGTH = 50;
 
     var _grid_width;
     var _grid_height;
@@ -62,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         _canvas = document.getElementById("snake");
 
-        _grid_width = Math.floor(_canvas.width / POINTSIZE);
-        _grid_height = Math.floor(_canvas.height / POINTSIZE);
+        _grid_width = Math.floor(_canvas.width / POINTSIZE) - 1;
+        _grid_height = Math.floor(_canvas.height / POINTSIZE) - 1;
 
         var x = Math.round(_grid_width / 2);
         var y = Math.round(_grid_height / 2);
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         console.log(_snake);
         console.log(_apple);
-        console.log("Game loaded");
+        console.log("Grid width = " + _grid_width + ", Grid height = " + _grid_height);
     };
 
     game.placeApple = function(){
@@ -84,12 +84,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var x = Math.floor(Math.random() * _grid_width);
             var y = Math.floor(Math.random() * _grid_height);
 
-            if(!this.pointInSnake(x, y)){
+            if(!this.pointInSnake(x, y) && !this.isCorner(x, y)){
                 pos = [x, y];
             }
         }
 
         _apple.position = pos;
+    };
+
+    game.isCorner = function(x, y){
+        return ((x === 0 && y === 0) || 
+                (x === 0 && y === _grid_height) ||
+                (x === _grid_width && y === 0) ||
+                (x === _grid_width && y === _grid_height));
     }
 
     game.pointInSnake = function(x, y){
@@ -122,35 +129,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return x === _apple.position[0] && y === _apple.position[1];
     };
 
-    game.isWallCollision = function(x, y){
-        return x === -1 || x === _grid_width || y === -1 || y === _grid_height;
+    game.outOfBounds = function(x, y){
+        return x < 0 || x > _grid_width || y < 0 || y > _grid_height;
     }
 
     game.isLoss = function(){
-        return game.isWallCollision(_snake.body[0][0], _snake.body[0][1]) || game.isBodyCollision(); 
+        return game.outOfBounds(_snake.body[0][0], _snake.body[0][1]) || game.isBodyCollision(); 
     }
 
     game.isWin = function(){
-        return _snake.body.length == WIN_LENGTH;
+        return _snake.body.length === WIN_LENGTH;
     }
 
     game.update = function(){
         var head = _snake.body[0];
-
-        if(game.isAppleTouched(_snake.body[0][0], _snake.body[0][1])){
-            _snake.grow();
-            game.placeApple();
-        }
-        _snake.move();
 
         if(game.isWin()){
             _won = true;
             game.pause();
         }
         else if(game.isLoss()){
-            console.log(_snake.body[0] + ' ' + _grid_width + ' ' + _grid_height);
             _lost = true;
             game.pause();
+        }
+        else{
+            if(game.isAppleTouched(_snake.body[0][0], _snake.body[0][1])){
+                _snake.grow();
+                game.placeApple();
+            }
+            _snake.move();
         }
 
         game.draw();
