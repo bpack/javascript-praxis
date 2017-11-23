@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Github User API</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <form>
+      <input type="text" id="username">
+      <button type="submit" id="load_button">Load User</button>
+      <span id="error-span"></span>
+    </form>
+    <div id="cardlist">
+    </div>
+
+    <script id="card-template" type="text/template">
+
+      <div class="card">
+        <img class="card-avatar" src="{{ avatar_url }}" />
+        <div class="card-properties">
+          <div class="card-name">
+            {{ name }}
+          </div>
+          <div class="card-location">{{ location }}</div>
+          <div class="card-location">{{ created_at }}</div>
+        </div>
+      </div>
+    
+    </script>
+
+    <script src="script.js">
+    </script>
+
+
+  </body>
+</html>
