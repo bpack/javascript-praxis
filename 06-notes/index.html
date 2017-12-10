@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Notes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans">
+  </head>
+  <body>
+
+    <form id="note-form">
+      <div class="column">
+        <label for="note-title">Title</label><input type="text" id="note-title">
+        <label for="crit-check">Important<input type="checkbox" id="crit-check"></label>
+      </div>
+
+      <div class="column">
+        <label for="note-categories">Categories</label><input type="text" id="note-categories">
+        <label for="due-by">Due Date</label><input type="date" id="due-by">
+      </div>
+      <textarea id="note-body"></textarea>
+      <input type="submit" id="save-note-btn" value="Save Note">
+
+      <span id="error-span"></span>
+    </form>
+
+    <table id="note-display">
+      <tr>
+        <th></th>
+      </tr>
+    </table>
+
+    <script id="card-template" type="text/template">
+
+      <div class="card">
+        <img class="card-avatar" src="{{ avatar_url }}" />
+        <div class="card-properties">
+          <div class="card-name">
+            {{ name }}
+          </div>
+          <div class="card-location">{{ location }}</div>
+          <div class="card-created">{{ created_at }}</div>
+        </div>
+      </div>
+    
+    </script>
+
+    <script src="script.js">
+    </script>
+
+
+  </body>
+</html>

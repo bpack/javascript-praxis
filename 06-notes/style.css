@@ -1,0 +1,53 @@
+html {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 62.5%;
+}
+
+body {
+    max-width: 450px;
+    width: 95%;
+}
+
+form {
+    font-size: 1.1em;
+    margin: 1em;
+}
+
+label {
+    display: block;
+}
+
+input {
+    line-height: 1em;
+}
+
+input[type=text],
+textarea {
+    width: 100%;
+    /* padding: 5px; */
+    box-sizing: border-box;
+}
+
+input[type=text],
+input[type=date],
+textarea {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+
+textarea {
+    resize: vertical;
+    min-height: 75px;
+}
+
+.column {
+    width: 50%;
+    float: left;
+}
+#error-span {
+    color: red;
+    padding-left: 1em;
+    font-size: 0.8em;
+}
+
