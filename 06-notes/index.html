@@ -20,27 +20,21 @@
       </div>
       <textarea id="note-body"></textarea>
       <input type="submit" id="save-note-btn" value="Save Note">
+      <input type="submit" id="clear-note-btn" value="Clear">
 
       <span id="error-span"></span>
     </form>
 
-    <table id="note-display">
-      <tr>
-        <th></th>
-      </tr>
-    </table>
+    <div id="note-display"></div>
 
-    <script id="card-template" type="text/template">
+    <script id="note-row-template" type="text/template">
 
-      <div class="card">
-        <img class="card-avatar" src="{{ avatar_url }}" />
-        <div class="card-properties">
-          <div class="card-name">
-            {{ name }}
-          </div>
-          <div class="card-location">{{ location }}</div>
-          <div class="card-created">{{ created_at }}</div>
-        </div>
+      <div id="{{ id }}" class="note-row">
+        <div class="title" onclick="app.notes.handle_load('{{ id }}')"><span class="underline">{{ title }}</span></div>
+        <div class="critical">{{ important }}</div>
+        <div class="due-date">{{ due_date }}</div>
+        <div class="categories">{{ categories }}</div>
+        <button class="delete-note-btn" onclick="app.notes.handle_delete('{{ id }}')">Delete</button>
       </div>
     
     </script>

@@ -51,3 +51,50 @@ textarea {
     font-size: 0.8em;
 }
 
+#note-display {
+    width: 100%;
+    margin: 1em;
+    font-size: 1.1em;
+}
+
+.note-row {
+    width: 100%;
+    height: 1.75em;
+}
+
+.delete-note-btn {
+
+}
+
+.title,
+.critical,
+.due-date,
+.categories {
+    height: 100%;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.title {
+    width: 30%;
+    cursor: pointer;
+}
+
+.critical {
+    width: 10%;
+}
+
+.due-date {
+    width: 15%;
+}
+
+.categories {
+    width: 30%;
+}
+
+.underline {
+    text-decoration-line: underline;
+    text-decoration: underline red;
+}
